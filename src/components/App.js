@@ -14,7 +14,7 @@ export class App extends React.Component {
             items: [],
             reference_list: [],
             sort_order: [],
-            render: <p>loading</p>
+            render: <p>loading</p>,
         };
     }
 
@@ -29,23 +29,15 @@ export class App extends React.Component {
             .catch((e) => console.error(e));
     }
 
-    componentDidUpdate = ()=> {
-        console.log('componentDidUpdate()')
-        console.log(this.state);
-    }
     fetchData = async () => {
         await this.fetchItems();
         await this.fetchReferenceList();
         await this.fetchSortOrder();
-        // this.setState({items: await TodoistRead()})
-        // this.setState({reference_list: await ReadFromFireStore('reference_list2')})
-        // this.setState({sort_order: await ReadFromFireStore('sort_order')})
     }
 
-    fetchItems = async (tr) =>{
-        console.log('fetching items')
-        this.setState({items: await TodoistRead()})
-        console.log('fetched items - ' + this.state.items)
+    fetchItems = async () =>{
+        const arr = await TodoistRead()
+        this.setState({items: arr})
     }
     fetchReferenceList = async ()=> {
         this.setState({reference_list: await ReadFromFireStore('reference_list2')})
@@ -56,15 +48,7 @@ export class App extends React.Component {
 
     render() {
         return (
-            this.state.render
-        )
+            <><List items={this.state.items} fetchItems={this.fetchItems} preloadedItems={this.state.items}/><SortingWrappper referenceList={this.state.reference_list}/></>
+        );
     }
-
 }
-//
-// const App = () => (
-//     <div>
-//         <List/>
-//     </div>
-// );
-// export default App;
